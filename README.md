@@ -161,7 +161,7 @@ admin     bd926a14-7a5d-11e8-b583-a44cc8fb623b               rh_sso:818ddb85-504
 
 Make Logout work in OCP-3.9
 
-```aidl
+```sh
 oc edit configmap/webconsole-config -n openshift-web-console
 -- set the value
 logoutPublicURL: https://secure-sso-sso.apps.bar.com/auth/realms/ocprealm/protocol/openid-connect/logout?redirect_uri=https://ocp.hosts.bar.com:8443/console/

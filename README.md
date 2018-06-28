@@ -11,6 +11,7 @@ See [users.csv](./users.csv) for example format.
 Note:
 - csv file must be in unix format - dos2unix.
 - KeyCloak API: https://www.keycloak.org/docs-api/4.0/rest-api/index.html#_overview
+- When user logs in for the first time have set Required Action to be = updatePassword
 
 ### Import users found in csv
 ```sh

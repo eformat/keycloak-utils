@@ -33,10 +33,10 @@ process_result() {
 }
 
 kc_login() {
-#  read -p "Base URL (e.g: https://myhostname/auth): " base_url
-#  read -p "Realm: " realm
-#  read -p "Client ID (create this client in the above Keycloak realm): " client_id
-#  read -p "Admin username: " admin_id
+  read -p "Base URL (e.g: https://myhostname/auth): " base_url
+  read -p "Realm: " realm
+  read -p "Client ID (create this client in the above Keycloak realm): " client_id
+  read -p "Admin username: " admin_id
   read -s -p "Admin Password: " admin_pwd; echo
 
   result=$(curl --write-out " %{http_code}" -s -k --request POST \

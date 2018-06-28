@@ -8,6 +8,8 @@ See [users.csv](./users.csv) for example format.
 1. In the realm admin user's settings > Client Role > "realm-management", assign it all available roles
 1. In client, enable Direct Grant API at Settings > Login
 
+Note: csv file must be in unix format - dos2unix.
+
 ### Import users found in csv
 ```sh
 $ ./import-users.sh --import users.csv

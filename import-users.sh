@@ -1,12 +1,16 @@
 #!/bin/bash
 
+#set -x
+
 #### Globals
-base_url=""
+base_url="https://secure-sso-sso.apps.bar.com/auth"
 access_token=""
 refresh_token=""
-userid=""
-realm=""
-client_id=""
+userid=
+realm="ocprealm"
+client_id="keycloak_acct_admin"
+admin_id=admin
+admin_pwd=
 
 #### Helpers
 process_result() {
@@ -29,10 +33,10 @@ process_result() {
 }
 
 kc_login() {
-  read -p "Base URL (e.g: https://myhostname/auth): " base_url
-  read -p "Realm: " realm
-  read -p "Client ID (create this client in the above Keycloak realm): " client_id
-  read -p "Admin username: " admin_id
+#  read -p "Base URL (e.g: https://myhostname/auth): " base_url
+#  read -p "Realm: " realm
+#  read -p "Client ID (create this client in the above Keycloak realm): " client_id
+#  read -p "Admin username: " admin_id
   read -s -p "Admin Password: " admin_pwd; echo
 
   result=$(curl --write-out " %{http_code}" -s -k --request POST \
@@ -67,7 +71,8 @@ kc_create_user() {
     "username": "'"$username"'",
     "email": "'"$email"'",
     "firstName": "'"$firstname"'",
-    "lastName": "'"$lastname"'"
+    "lastName": "'"$lastname"'",
+    "requiredActions": ["updatePassword"]
   }' "$base_url/admin/realms/$realm/users")
 
   # userid=$(echo "$result" | grep -o "Location: .*" | egrep -o '[a-zA-Z0-9]+(-[a-zA-Z0-9]+)+') #parse userid
@@ -99,7 +104,7 @@ kc_lookup_username() {
   --header "Authorization: Bearer $access_token" \
   "$base_url/admin/realms/$realm/users?username=${username}")
 
-  userid=`echo $result | grep -Eo '"id":.*?[^\\]"' | cut -d':'  -f 2 | sed -e 's/"//g'`
+  userid=`echo -n $result | grep -Eo '"id":.*?[^\\]","createdTimestamp' | cut -d':'  -f 2 | sed -e 's/,"createdTimestamp//g' -e 's/\"//g'`
   
   msg="$username: lookup "
   process_result "200" "$result" "$msg"
@@ -177,8 +182,10 @@ import_accts() {
 
     kc_create_user "${arr[0]}" "${arr[1]}" "${arr[2]}" "${arr[3]}"
 
+#    kc_lookup_username "${arr[2]}"
+
     [ $? -ne 0 ] || kc_set_pwd "$userid" "${arr[4]}"  #skip if kc_create_user failed
-    [ $? -ne 0 ] || kc_set_group_hard "$userid" "${arr[5]}" #skip if kc_create_user failed
+#    [ $? -ne 0 ] || kc_set_group_hard "$userid" "${arr[5]}" #skip if kc_create_user failed
   done < "$csv_file"
 
   #kc_logout
@@ -208,7 +215,7 @@ case $flag in
   "--test" )
     unit_test
     ;;
-        "--delete" )
+  "--delete" )
     csv_file="$2"
     if [ -z "$csv_file" ]; then
       echo "Error: missing 'csv_file' argument"

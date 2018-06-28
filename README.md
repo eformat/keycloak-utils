@@ -90,7 +90,7 @@ oc new-app sso72-postgresql-persistent \
   -p SSO_SERVICE_USERNAME=sso-mgmtuser \
   -p SSO_SERVICE_PASSWORD=mgmt-password \
   -p SSO_ADMIN_USERNAME=admin \
-  -p SSO_ADMIN_PASSWORD=lionred3 \
+  -p SSO_ADMIN_PASSWORD=password \
   -p SSO_TRUSTSTORE=truststore.jks \
   -p SSO_TRUSTSTORE_SECRET=sso-ssl-secret \
   -p SSO_TRUSTSTORE_PASSWORD=pass:xxxx \
